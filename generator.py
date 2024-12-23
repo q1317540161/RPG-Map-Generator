@@ -9,7 +9,7 @@ GENERATIONS = 30
 # P1 = 0.5  # Probability of changing a neighbor
 # P2, P3, P4 = 0.33, 0.33, 0.33  # Probabilities for choosing grass, river, or mountain
 
-P1, P2, P3 = 0.3, 0.7, 0.5
+P1, P2, P3 = 0.3, 0.7, 0.55
 # Terrain types
 GRASS = 1
 RIVER = 2
@@ -18,10 +18,6 @@ MOUNTAIN = 3
 # Initialize population as empty grassland
 def initialize_population():
     map_grid = [np.full((ROWS, COLS), GRASS) for _ in range(POPULATION_SIZE)]
-    lake_height = random.randint(3, 6)
-    lake_width = random.randint(3, 6)
-    start_x = random.randint(0, ROWS-1)
-    start_y = random.randint(0, COLS-1)
 
     for map in map_grid:
         map[0,:] = MOUNTAIN          # Top border
@@ -33,10 +29,16 @@ def initialize_population():
         map[:,-1] = MOUNTAIN         # Right border
         map[:,-2] = MOUNTAIN         # Right border
 
-        for i in range(start_x, start_x + lake_height):
-            for j in range(start_y, start_y + lake_width):
-                if (0 <= i < ROWS) and (0 <= j < COLS):
-                    map[i][j] = RIVER
+        num_lake = random.randint(1, 4)
+        for l in range(num_lake):
+            lake_height = random.randint(3, 6)
+            lake_width = random.randint(3, 6)
+            start_x = random.randint(0, ROWS-1)
+            start_y = random.randint(0, COLS-1)
+            for i in range(start_x, start_x + lake_height):
+                for j in range(start_y, start_y + lake_width):
+                    if (0 <= i < ROWS) and (0 <= j < COLS):
+                        map[i][j] = RIVER
 
         
 
@@ -160,4 +162,4 @@ def save_map_to_txt(map_grid, file_name):
 
 if __name__ == "__main__":
     best_map = genetic_algorithm()
-    save_map_to_txt(best_map, "map1.txt")
+    save_map_to_txt(best_map, "map.txt")
